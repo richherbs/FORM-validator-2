@@ -1,0 +1,37 @@
+body{
+    background-image: url(../images/bald-eagle.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    font-family: 'Gotu', sans-serif;
+}
+
+input{
+    background-color: transparent;
+    border-radius: 10px;
+}
+
+h1{
+    font-family: 'Press Start 2P', cursive;
+    text-align: center;
+    background-color: yellowgreen;
+    opacity: 80%;
+    padding: 30px;
+    font-size: 5rem;
+    border: slategray solid 3px;
+    border-radius: 10px;
+}
+
+label{
+    color: black;
+    background-color: slategrey;
+    opacity: 80%;
+    border-radius: 3px;
+    padding: 3px;
+    border: black solid 1px;
+}
+
+.btn{
+    color: white;
+    background-color: slategray;
+}
