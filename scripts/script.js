@@ -5,7 +5,7 @@ let formsOK = false
 let explosion = new Audio('../sounds/235968__tommccann__explosion-01.wav')
 let fanfare = new Audio('../sounds/413204__joepayne__clean-trumpet-fanfare-with-wobble.mp3')
 let body = document.querySelector('body')
-const LETTERSONLY = /^[A-Z,a-z]+$/
+const LETTERSONLY = /^[A-Za-z]+$/
 const NUMBERSONLY = /^[0-9]+$/
 
 // Able to validate required fields tick
@@ -22,41 +22,54 @@ inputs.forEach(element => {
         let minLength = activeElement.minLength
         let maxLength = activeElement.maxLength
         formsOK = true
-        if(activeElement.required && activeElement.value.length < 1){
-            activeElement.placeholder = "This is a required field"
+        if(fieldRequired(activeElement)){
+            activeElement.value = ''
+            activeElement.placeholder = "This field is required"
             explosion.play()
             explosionBackground(body)
             formsOK = false
         }
 
-        console.log(activeElement.classList)
-        if(activeElement.classList.contains('letters-only') && !(LETTERSONLY.test(value))){
+        if(checkRegex(activeElement, LETTERSONLY, 'letters-only')){
+            activeElement.value = ''
             activeElement.placeholder = "This field only accepts letters"
             explosion.play()
             explosionBackground(body)
             formsOK = false
         }
-        if(activeElement.classList.contains('numbers-only') && !(NUMBERSONLY.test(activeElement))){
+        if(checkRegex(activeElement, NUMBERSONLY, 'numbers-only')){
+            activeElement.value = ''
             activeElement.placeholder = "This field only accepts numbers"
+            explosion.play()
+            explosionBackground(body)
             formsOK = false
         }
         if(maxLength > -1 || minLength > -1){
-            if(value.length <= parse(minLength) || value.length > parse(maxLength)){
-                activeElement.placeholder = `This field must be between ${minLength} and ${maxLength}`
+            if((value.length < minLength) || (value.length > maxLength)){
+                activeElement.value = ''
+                activeElement.placeholder = `Entry must be longer than ${minLength} and shorter than ${maxLength}`
+                explosion.play()
+                explosionBackground(body)
                 formsOK = false
             }
         }
         if(activeElement.type == 'radio' && activeElement.checked && activeElement.value == 1){
+            requiredIfAbove.placeHolder = 'This field is required'
             requiredIfAbove.required = true
+        } else {
+            requiredIfAbove.placeHolder = 'This field is not required'
+            requiredIfAbove.required = false
         }
     })
 });
 
-submit.addEventListener('click', ()=>{
-    if(!formsOK){
+submit.addEventListener('click', (e)=>{
+    if(formsOK){
+        fanfare.play()
+    } else {
+        e.preventDefault()
         console.log('There\'s something wrong with the form')
     }
-    fanfare.play()
 })
 
 function explosionBackground(anElement){
@@ -64,4 +77,12 @@ function explosionBackground(anElement){
     setTimeout(()=>{
         anElement.style.backgroundImage = 'url(../images/bald-eagle.jpg)'
     }, 2000)
+}
+
+function fieldRequired(anElement){
+    return anElement.required && anElement.value.length < 1
+}
+
+function checkRegex(anElement, aRegex, aClass){
+    return anElement.classList.contains(aClass) && !(aRegex.test(anElement.value))
 }
