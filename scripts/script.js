@@ -7,6 +7,7 @@ let fanfare = new Audio('../sounds/413204__joepayne__clean-trumpet-fanfare-with-
 let body = document.querySelector('body')
 const LETTERSONLY = /^[A-Za-z]+$/
 const NUMBERSONLY = /^[0-9]+$/
+const EMAILADDRESS = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/
 
 // Able to validate required fields tick
 // Able to change field required state depending on other fields state
@@ -60,6 +61,13 @@ inputs.forEach(element => {
             requiredIfAbove.placeHolder = 'This field is not required'
             requiredIfAbove.required = false
         }
+        if(checkRegex(activeElement, EMAILADDRESS, 'e-mail')){
+            activeElement.value = ''
+            activeElement.placeholder = `Entry must be a valid email`
+            explosion.play()
+            explosionBackground(body)
+            formsOK = false
+        }
     })
 });
 
@@ -68,6 +76,7 @@ submit.addEventListener('click', (e)=>{
         fanfare.play()
     } else {
         e.preventDefault()
+        explosionBackground(body)
         console.log('There\'s something wrong with the form')
     }
 })
